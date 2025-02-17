@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  swagger:
+    image: swaggerapi/swagger-ui:v3.52.0
+    ports:
+      - ${PROJECT_PORT_PREFIX}1:8080
+    environment:
+      URL: swagger.yaml
+    volumes:
+      - ./swagger/swagger.yaml:/usr/share/nginx/html/swagger.yaml
+    labels:
+      swaggerLabel: API
+      swaggerGroup: web-archive
+      swaggerPort: ${PROJECT_PORT_PREFIX}1
+
+  db:
+    image: postgres:13.4-alpine
+    volumes:
+      - db:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - ${PROJECT_PORT_PREFIX}2:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api-tron-information:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    ports:
+      - ${PROJECT_PORT_PREFIX}0:${APP_PORT}
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_SCHEME: ${DB_SCHEME}
+      ENV: development
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT}
+    networks:
+      - default
+
+volumes:
+  db:

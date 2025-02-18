@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import UUID4, Field
+from pydantic import Field
 
 from app.models.utils import ApiModel
 

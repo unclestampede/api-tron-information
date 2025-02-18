@@ -6,12 +6,14 @@ from tronpy import AsyncTron
 from tronpy.exceptions import AddressNotFound, BadAddress
 
 from app import models
-from app.tron_session import get_tron_session
 from app.db import DBFacadeInterface, get_db_facade
+from app.tron_session import get_tron_session
 
 
 class TronService:
-    def __init__(self, db_facade: DBFacadeInterface = Depends(get_db_facade), tron_session: AsyncTron = Depends(get_tron_session)):
+    def __init__(
+        self, db_facade: DBFacadeInterface = Depends(get_db_facade), tron_session: AsyncTron = Depends(get_tron_session)
+    ):
         self._db_facade = db_facade
         self._tron_session = tron_session
 

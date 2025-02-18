@@ -13,7 +13,13 @@ from sqlalchemy.orm import sessionmaker
 from alembic.command import upgrade
 from alembic.config import Config
 from app import settings
+from app.db.facade import DBFacade
 from tests.db_setup import create_test_db, drop_test_db
+
+
+@pytest_asyncio.fixture
+async def db_facade(db: AsyncSession) -> DBFacade:
+    return DBFacade(session=db)
 
 
 @pytest.fixture(scope="session")

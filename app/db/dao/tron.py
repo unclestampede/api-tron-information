@@ -4,7 +4,6 @@ from sqlalchemy import BigInteger, asc, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.sql.expression import cast
-from loguru import logger
 
 from app import models
 from app.db import tables
